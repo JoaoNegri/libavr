@@ -9,23 +9,23 @@ private:
 
     unsigned char mask;
 
-    unsigned char * PORTX;
-    unsigned char * DDRX;
-    unsigned char * PINX;
+    unsigned volatile char * PORTX;
+    unsigned volatile char * DDRX;
+    unsigned volatile char * PINX;
     
 
-    static unsigned char * PORTD;
-    static unsigned char * DDRD;
-    static unsigned char * PIND;
+    static volatile unsigned char * PORTD;
+    static volatile unsigned char * DDRD;
+    static volatile unsigned char * PIND;
 
-    static unsigned char * PORTB;
-    static unsigned char * DDRB;
+    static volatile unsigned char * PORTB;
+    static volatile unsigned char * DDRB;
     
-    static unsigned char * PINB;
-    static unsigned char * MCUCR; 
+    static volatile unsigned char * PINB;
+    static volatile unsigned char * MCUCR; 
 
-    static unsigned char * EIMSK;
-    static unsigned char * EICRA;
+    static volatile unsigned char * EIMSK;
+    static volatile unsigned char * EICRA;
 
 public:
 
