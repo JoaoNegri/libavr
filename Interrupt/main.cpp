@@ -1,5 +1,6 @@
 #include "gpio_pin.h"
 #include "uart.h"
+#include "fifo.h"
 
 bool buttonState;
 int estado = 0;
@@ -8,7 +9,7 @@ void func();
 GPIO led(8, GPIO::OUTPUT);
 GPIO button(2, GPIO::INT_RISE, func);
 
-UART uart;
+UART uart(9600);
 
 void func()
 {
@@ -34,6 +35,9 @@ void loop()
 {
 
     // uart.puts("abc");
+
+    FIFO <char, 4>fifo;
+
     // delay(5);
     switch (estado)
     {
@@ -43,6 +47,7 @@ void loop()
         {
             estado = 1;
             led.set();
+            uart.syncPuts("ue");
         }
 
         break;

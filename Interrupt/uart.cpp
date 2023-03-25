@@ -7,11 +7,15 @@ volatile unsigned char * UART::UCSRB = (unsigned char *)0xC1;
 volatile unsigned char * UART::UCSRC = (unsigned char *)0xC2;
 volatile unsigned char * UART::UDR = (unsigned char *)0xC6;
 
+const long FOSC = 16000000;
 
-UART::UART()
+
+UART::UART(long baudrate)
 {
+    unsigned int ubrr = 0; //baud rate (datasheet)
 
-    unsigned int ubrr = 16; //baud rate (datasheet)
+    ubrr = FOSC/(16*baudrate)-1;
+    
     //configurar para 8N1@57600
     *UBRR0H = (unsigned char) (ubrr >>8);
     *UBRR0L = (unsigned char) ubrr;
@@ -23,25 +27,25 @@ UART::~UART()
 {
 }
 
-void UART::put(const char c){
+void UART::syncPut(const char c){
     
     //aguarda o TX estar livre
     while (!(*UCSRA & (1<<5))){}
     
     *UDR = c;
 }
-char UART::get(){
+char UART::syncGet(){
     while(true){
         if (*UCSRA & 1<<7){
             return *UDR;
         }
     }
 }
-void UART::puts(const char * c){
+void UART::syncPuts(const char * c){
     char letra = c[0];
     for (int i=1 ; letra !='\0';i++){
 
-        put(letra);
+        syncPut(letra);
         letra = c[i];
     }
 

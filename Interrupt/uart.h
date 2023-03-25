@@ -13,11 +13,11 @@ private:
     static volatile unsigned char * UDR;
 
 public:
-    UART(); //default: 8N1@57600
+    UART(long baudrate); //default: 8N1@57600
     ~UART();
-    void put(const char c);
-    char get();
-    void puts(const char * c);
+    void syncPut(const char c);
+    char syncGet();
+    void syncPuts(const char * c);
     // void syncPut(const char c);
     // char syncGet();
     // void syncPuts(const char * c);
