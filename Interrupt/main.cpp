@@ -75,8 +75,8 @@ void loop()
         ledVerde.clear();
         if (uart.avaliable() > 0)
         {
-            count++;
             uart.get(XOR[0]);
+            count+=XOR[0];
             uart.put(count);
         }
         if (buttonState == 1)
