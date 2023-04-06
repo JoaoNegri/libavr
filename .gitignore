@@ -1,1 +1,3 @@
-fifo.*
+*.o
+*.ihex
+*.elf
