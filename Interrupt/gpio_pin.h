@@ -20,8 +20,12 @@ private:
 
     static volatile unsigned char * PORTB;
     static volatile unsigned char * DDRB;
-    
     static volatile unsigned char * PINB;
+
+    static volatile unsigned char * PORTC;
+    static volatile unsigned char * DDRC;
+    static volatile unsigned char * PINC;
+
     static volatile unsigned char * MCUCR; 
 
     static volatile unsigned char * EIMSK;

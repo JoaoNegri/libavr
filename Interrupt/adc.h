@@ -20,23 +20,31 @@ private:
   bool running;
 
   static volatile unsigned char * ADMUX;
+  static volatile unsigned char * ADCSRA;
+  static volatile unsigned char * ADCH;
+  static volatile unsigned char * ADCL;
 
+  static ADC *adcs[7];
 
-  static ADC *adcs[6];
+  static FIFOCIRC<int,8> fifo;
 
 
 public:
+  static void sampleHandler();
+
   ADC(int ch, Ref_t ref);
   // ADC(int ch);
   ~ADC();
   float sample_volt();
-  int sample();
+
+  int sample(int &info);
+
   float sync_sample_volt();
-  int sync_sample();
+  int sync_sample(int &info);
   int get();
   bool start();
   bool stop();
-
+  int avaliable();
 
 };
 

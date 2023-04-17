@@ -1,9 +1,6 @@
 #include "gpio_pin.h"
 #include "uart.h"
 #include "fifo.h"
-#include "adc.h"
-#include "stdio.h"
-#include "stdlib.h"
 
 bool buttonState;
 int estado = 0;
@@ -11,14 +8,17 @@ void func();
 char XOR[2];
 int aux =0;
 int count =0;
-int info;
+
 GPIO ledVerde(8, GPIO::OUTPUT);
 GPIO ledVermelho(7, GPIO::OUTPUT);
-GPIO potenciometro(14, GPIO::INPUT);
 GPIO button(2, GPIO::INT_RISE, func);
 
 UART uart(9600);
-ADC adc(0,ADC::AVCC);
+
+void func()
+{
+    buttonState = 1;
+}
 
 void setup()
 {
@@ -34,32 +34,34 @@ void delay(unsigned int times)
             ;
     }
 }
-void func()
-{
-    buttonState = 1;
-}
 
-float tensao;
 void loop()
-{       
+{
     switch (estado)
     {
     case 0: // xor
         ledVerde.set();
         ledVermelho.clear();
 
-        adc.start();
-
-        char str[11]; // 6 caracteres + terminador nulo
-        
-        dtostrf(adc.sample_volt(), 4, 2, str); // converte o valor em ponto flutuante para uma string com 2 casas decimais
-        uart.syncPuts(str);
-
-        uart.put(adc.avaliable());
+        if (uart.avaliable() > 0)
+        {
+            if (aux == 0)
+            {
+                XOR[0] = '\0';
+                aux++;
+            }
+            else
+            {
+                uart.get(XOR[1]);
+                uart.put(XOR[0] ^ XOR[1]);
+                XOR[0] = XOR[1];
+            }
+        }
 
         if (buttonState == 1)
         {
-
+            XOR[0] ='\0';
+            XOR[1] ='\0';
             estado = 1;
         }
         break;
@@ -71,13 +73,15 @@ void loop()
     case 2: // acc
         ledVermelho.set();
         ledVerde.clear();
-
-        
-        adc.stop();
-        
-        uart.put(adc.avaliable());
+        if (uart.avaliable() > 0)
+        {
+            uart.get(XOR[0]);
+            count+=XOR[0];
+            uart.put(count);
+        }
         if (buttonState == 1)
         {
+            count = 0;
             estado = 3;
         }
         break;
@@ -89,8 +93,6 @@ void loop()
     default:
         break;
     }
-    delay(5);
-
 }
 
 int main()

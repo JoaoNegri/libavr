@@ -7,6 +7,10 @@
     volatile unsigned char * GPIO::PORTB = (unsigned char *) 0x25;
     volatile unsigned char * GPIO::DDRB = (unsigned char *) 0x24;
     volatile unsigned char * GPIO::PINB = (unsigned char *) 0x23;
+
+    volatile unsigned char * GPIO::PORTC = (unsigned char *) 0x28;
+    volatile unsigned char * GPIO::DDRC = (unsigned char *) 0x27;
+    volatile unsigned char * GPIO::PINC = (unsigned char *) 0x26;
     
     volatile unsigned char * GPIO::MCUCR = (unsigned char *) 0x55;
     volatile unsigned char * GPIO::EIMSK = (unsigned char *) 0x3D;
@@ -43,6 +47,12 @@ GPIO::GPIO(int pin, GPIO_Direction_t dir,HandlerFunc_t func)
         PORTX = PORTB;
         DDRX = DDRB;
         PINX = PINB;
+    } else if (pin < 20){
+        PORTX = PORTC;
+        DDRX = DDRC;
+        PINX = PINC;
+        mask = 1 << (pin-14);
+
     }
     
 

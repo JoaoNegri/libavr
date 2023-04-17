@@ -61,4 +61,72 @@ public:
     }
 };
 
+template <typename T, int N>
+
+class FIFOCIRC
+{
+
+private:
+    T data[N];
+    int in, out, size;
+
+public:
+    int put(T element)
+    {
+        if (this->in < N - 1)
+        {
+            this->data[this->in++] = element;
+            if (this->size < N - 1){
+                this->size++;
+            }
+
+        }
+        else if (this->in == N - 1)
+        {
+            this->in = 0;
+            this->data[this->in] = element;
+            if (this->size < N - 1){
+                this->size++;
+            }
+        }else{
+            return -1;
+        }
+        return 0;
+    }
+
+    int get(T &info)
+    {
+        if (this->size > 0)
+        {
+            if (this->out<N - 1)
+            {
+                this->size--;
+                info = this->data[this->out++];
+                return 0;
+            }
+            else if (this->out == N - 1)
+            {
+                this->size--;
+                this->out = 0;
+                info = this->data[this->out];
+                return 0;
+            }
+        }
+        info = 0;
+        return -1;
+    }
+
+    int getSize(){
+        return this->size;
+    }
+
+    FIFOCIRC() : in(0), out(0), size(0)
+    {
+    }
+    ~FIFOCIRC(){
+    }
+};
+
+
+
 #endif
